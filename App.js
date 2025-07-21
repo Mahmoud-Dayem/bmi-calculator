@@ -7,6 +7,7 @@ const BMICalculator = () => {
   const [bmi, setBmi] = useState(null);
   const [message, setMessage] = useState('');
   const [weightRange, setWeightRange] = useState('');
+  const [resultColor, setResultColor] = useState('#27AE60'); // Default is green for normal
 
   const handleCalculate = () => {
     let weightValue = parseFloat(weight);
@@ -33,16 +34,26 @@ const BMICalculator = () => {
     const calculatedBmi = weightValue / (heightValue * heightValue);
     setBmi(calculatedBmi.toFixed(2));
 
-    // BMI categories
+    // BMI categories and setting result color
+    let bmiCategory = '';
+    let color = '#27AE60'; // Default color for normal weight
+
     if (calculatedBmi < 18.5) {
-      setMessage('Underweight');
+      bmiCategory = 'Underweight';
+      color = '#E74C3C'; // Red for underweight
     } else if (calculatedBmi >= 18.5 && calculatedBmi < 24.9) {
-      setMessage('Normal weight');
+      bmiCategory = 'Normal weight';
+      color = '#27AE60'; // Green for normal weight
     } else if (calculatedBmi >= 25 && calculatedBmi < 29.9) {
-      setMessage('Overweight');
+      bmiCategory = 'Overweight';
+      color = '#F39C12'; // Yellow for overweight
     } else {
-      setMessage('Obesity');
+      bmiCategory = 'Obesity';
+      color = '#E74C3C'; // Red for obesity
     }
+
+    setMessage(bmiCategory);
+    setResultColor(color);
 
     // Calculate recommended weight range for normal BMI (18.5 - 24.9)
     const lowerWeight = 18.5 * heightValue * heightValue;
@@ -76,8 +87,8 @@ const BMICalculator = () => {
 
       {bmi && (
         <View style={styles.resultContainer}>
-          <Text style={styles.result}>Your BMI: {bmi}</Text>
-          <Text style={styles.category}>Category: {message}</Text>
+          <Text style={[styles.result, { color: resultColor }]}>Your BMI: {bmi}</Text>
+          <Text style={[styles.category, { color: resultColor }]}>Category: {message}</Text>
           <Text style={styles.recommendedWeight}>{weightRange}</Text>
         </View>
       )}
@@ -142,12 +153,10 @@ const styles = StyleSheet.create({
   result: {
     fontSize: 26,
     fontWeight: '600',
-    color: '#27AE60',
     marginBottom: 10,
   },
   category: {
     fontSize: 20,
-    color: '#555',
     marginBottom: 15,
   },
   recommendedWeight: {
