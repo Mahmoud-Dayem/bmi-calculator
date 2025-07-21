@@ -63,21 +63,7 @@ const BMICalculator = () => {
     setWeightRange(`Recommended weight: ${lowerWeight.toFixed(1)}kg - ${upperWeight.toFixed(1)}kg`);
   };
 
-  // Function to generate points for sine wave
-  const generateSineWave = (freq) => {
-    const points = [];
-    const width = 500; // Width of the SVG graph
-    const height = 100; // Height of the SVG graph
-    const amplitude = 40; // Amplitude of sine wave
-
-    // Generate sine wave points
-    for (let x = 0; x <= width; x++) {
-      const y = height / 2 + amplitude * Math.sin((2 * Math.PI * freq * (x / width)));
-      points.push(`${x},${y}`);
-    }
-
-    return points.join(' ');
-  };
+  
 
   return (
     <View style={styles.container}>
@@ -110,32 +96,8 @@ const BMICalculator = () => {
           <Text style={styles.recommendedWeight}>{weightRange}</Text>
         </View>
       )}
-              <Text style={styles.graphTitle}>Sine Wave (Frequency: {frequency} Hz)</Text>
-
-
-      <View style={styles.graphContainer}>
-        <Text style={styles.graphTitle}>Sine Wave (Frequency: {frequency} Hz)</Text>
-
-        {/* Slider for frequency control */}
-        <Slider
-          style={styles.slider}
-          minimumValue={0.1}
-          maximumValue={5}
-          step={0.1}
-          value={frequency}
-          onValueChange={setFrequency}
-        />
-
-        {/* SVG container for sine wave */}
-        <Svg width="100%" height="150">
-          <Path
-            d={`M ${generateSineWave(frequency)}`}
-            fill="none"
-            stroke="blue"
-            strokeWidth="2"
-          />
-        </Svg>
-      </View>
+    
+      
     </View>
   );
 };

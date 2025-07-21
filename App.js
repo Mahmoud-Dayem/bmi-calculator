@@ -1,98 +1,16 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import BMICalculator from './components/BMICalculator ';
+import SineWave from './components/SineWave';
+const App = () => {
 
-const BMICalculator = () => {
-  const [weight, setWeight] = useState('');
-  const [height, setHeight] = useState('');
-  const [bmi, setBmi] = useState(null);
-  const [message, setMessage] = useState('');
-  const [weightRange, setWeightRange] = useState('');
-  const [resultColor, setResultColor] = useState('#27AE60'); // Default is green for normal
-
-  const handleCalculate = () => {
-    let weightValue = parseFloat(weight);
-    let heightValue = parseFloat(height);
-
-    // Check if inputs are valid numbers
-    if (isNaN(weightValue) || weightValue <= 0) {
-      alert('Please enter a valid positive number for weight.');
-      return;
-    }
-
-    // Check if height is in centimeters or meters, and convert accordingly
-    if (isNaN(heightValue) || heightValue <= 0) {
-      alert('Please enter a valid positive number for height.');
-      return;
-    }
-
-    // If height is greater than 3 meters, assume it's in centimeters
-    if (heightValue > 3) {
-      heightValue = heightValue / 100; // Convert cm to meters
-    }
-
-    // Calculate BMI
-    const calculatedBmi = weightValue / (heightValue * heightValue);
-    setBmi(calculatedBmi.toFixed(2));
-
-    // BMI categories and setting result color
-    let bmiCategory = '';
-    let color = '#27AE60'; // Default color for normal weight
-
-    if (calculatedBmi < 18.5) {
-      bmiCategory = 'Underweight';
-      color = '#E74C3C'; // Red for underweight
-    } else if (calculatedBmi >= 18.5 && calculatedBmi < 24.9) {
-      bmiCategory = 'Normal weight';
-      color = '#27AE60'; // Green for normal weight
-    } else if (calculatedBmi >= 25 && calculatedBmi < 29.9) {
-      bmiCategory = 'Overweight';
-      color = '#F39C12'; // Yellow for overweight
-    } else {
-      bmiCategory = 'Obesity';
-      color = '#E74C3C'; // Red for obesity
-    }
-
-    setMessage(bmiCategory);
-    setResultColor(color);
-
-    // Calculate recommended weight range for normal BMI (18.5 - 24.9)
-    const lowerWeight = 18.5 * heightValue * heightValue;
-    const upperWeight = 24.9 * heightValue * heightValue;
-    setWeightRange(`Recommended weight: ${lowerWeight.toFixed(1)}kg - ${upperWeight.toFixed(1)}kg`);
-  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>BMI Calculator</Text>
+    <>
+       {/* <BMICalculator /> */}
+       <SineWave/>
+    </>
 
-      <TextInput
-        style={styles.input}
-        value={weight}
-        onChangeText={setWeight}
-        placeholder="Enter weight (kg)"
-        keyboardType="numeric"
-      />
-
-      <TextInput
-        style={styles.input}
-        value={height}
-        onChangeText={setHeight}
-        placeholder="Enter height (cm or m)"
-        keyboardType="numeric"
-      />
-
-      <TouchableOpacity style={styles.button} onPress={handleCalculate}>
-        <Text style={styles.buttonText}>Calculate BMI</Text>
-      </TouchableOpacity>
-
-      {bmi && (
-        <View style={styles.resultContainer}>
-          <Text style={[styles.result, { color: resultColor }]}>Your BMI: {bmi}</Text>
-          <Text style={[styles.category, { color: resultColor }]}>Category: {message}</Text>
-          <Text style={styles.recommendedWeight}>{weightRange}</Text>
-        </View>
-      )}
-    </View>
   );
 };
 
@@ -166,4 +84,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BMICalculator;
+export default App;
