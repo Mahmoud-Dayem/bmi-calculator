@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   input: {
-    width: '100%',
+    width: 200,
     height: 50,
     borderColor: '#BDC3C7',
     borderWidth: 1.5,
@@ -133,8 +133,8 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   button: {
-    width: '100%',
-    height: 50,
+    width: 200,
+    height: 60,
     backgroundColor: '#4CAF50',
     borderRadius: 25,
     justifyContent: 'center',
@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
+    padding:5,
   },
   buttonText: {
     fontSize: 18,
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   result: {
-    fontSize: 26,
+    fontSize: 18,
     fontWeight: '600',
     marginBottom: 10,
   },
@@ -166,9 +167,12 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   recommendedWeight: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#7F8C8D',
     fontStyle: 'italic',
+    margin:10,
+    width:'100%'
+
   },
   graphContainer: {
     marginTop: 40,

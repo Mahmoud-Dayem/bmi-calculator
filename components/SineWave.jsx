@@ -36,7 +36,7 @@ const SineWave = () => {
           style={styles.slider}
           minimumValue={1}
           maximumValue={50}
-          step={0.1}
+          step={0.5}
           value={frequency}
           onValueChange={setFrequency}
         />

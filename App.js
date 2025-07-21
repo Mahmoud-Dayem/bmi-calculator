@@ -8,7 +8,7 @@ const App = () => {
   return (
     <View style={styles.container}>
        <BMICalculator />
-       <SineWave/>
+       {/* <SineWave/> */}
     </View>
 
   );
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   button: {
-    width: '100%',
+    width: 300,
     height: 50,
     backgroundColor: '#4CAF50',
     borderRadius: 25,
