@@ -34,7 +34,7 @@ const SineWave = () => {
         {/* Slider for frequency control */}
         <Slider
           style={styles.slider}
-          minimumValue={0.1}
+          minimumValue={1}
           maximumValue={50}
           step={0.1}
           value={frequency}
@@ -46,7 +46,7 @@ const SineWave = () => {
           <Path
             d={`M ${generateSineWave(frequency)}`}
             fill="none"
-            stroke="blue"
+            stroke="green"
             strokeWidth="2"
           />
         </Svg>

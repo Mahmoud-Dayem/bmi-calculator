@@ -6,10 +6,10 @@ const App = () => {
 
 
   return (
-    <>
-       {/* <BMICalculator /> */}
+    <View style={styles.container}>
+       <BMICalculator />
        <SineWave/>
-    </>
+    </View>
 
   );
 };
