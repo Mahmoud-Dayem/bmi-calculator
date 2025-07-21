@@ -1,35 +1,82 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Slider } from 'react-native';
+import Svg, { Line, Path } from 'react-native-svg'; // Importing Svg and Path from react-native-svg
 
 const BMICalculator = () => {
   const [weight, setWeight] = useState('');
   const [height, setHeight] = useState('');
   const [bmi, setBmi] = useState(null);
   const [message, setMessage] = useState('');
-
+  const [weightRange, setWeightRange] = useState('');
+  const [resultColor, setResultColor] = useState('#27AE60'); // Default is green for normal
+  const [frequency, setFrequency] = useState(1); // Default frequency for sine wave
 
   const handleCalculate = () => {
-    const weightValue = parseFloat(weight);
-    const heightValue = parseFloat(height);
+    let weightValue = parseFloat(weight);
+    let heightValue = parseFloat(height);
 
-    if (isNaN(weightValue) || isNaN(heightValue) || weightValue <= 0 || heightValue <= 0) {
-      alert('Please enter valid positive numbers for weight and height');
+    // Check if inputs are valid numbers
+    if (isNaN(weightValue) || weightValue <= 0) {
+      alert('Please enter a valid positive number for weight.');
       return;
     }
 
+    // Check if height is in centimeters or meters, and convert accordingly
+    if (isNaN(heightValue) || heightValue <= 0) {
+      alert('Please enter a valid positive number for height.');
+      return;
+    }
+
+    // If height is greater than 3 meters, assume it's in centimeters
+    if (heightValue > 3) {
+      heightValue = heightValue / 100; // Convert cm to meters
+    }
+
+    // Calculate BMI
     const calculatedBmi = weightValue / (heightValue * heightValue);
     setBmi(calculatedBmi.toFixed(2));
 
-    // BMI categories
+    // BMI categories and setting result color
+    let bmiCategory = '';
+    let color = '#27AE60'; // Default color for normal weight
+
     if (calculatedBmi < 18.5) {
-      setMessage('Underweight');
+      bmiCategory = 'Underweight';
+      color = '#E74C3C'; // Red for underweight
     } else if (calculatedBmi >= 18.5 && calculatedBmi < 24.9) {
-      setMessage('Normal weight');
+      bmiCategory = 'Normal weight';
+      color = '#27AE60'; // Green for normal weight
     } else if (calculatedBmi >= 25 && calculatedBmi < 29.9) {
-      setMessage('Overweight');
+      bmiCategory = 'Overweight';
+      color = '#F39C12'; // Yellow for overweight
     } else {
-      setMessage('Obesity');
+      bmiCategory = 'Obesity';
+      color = '#E74C3C'; // Red for obesity
     }
+
+    setMessage(bmiCategory);
+    setResultColor(color);
+
+    // Calculate recommended weight range for normal BMI (18.5 - 24.9)
+    const lowerWeight = 18.5 * heightValue * heightValue;
+    const upperWeight = 24.9 * heightValue * heightValue;
+    setWeightRange(`Recommended weight: ${lowerWeight.toFixed(1)}kg - ${upperWeight.toFixed(1)}kg`);
+  };
+
+  // Function to generate points for sine wave
+  const generateSineWave = (freq) => {
+    const points = [];
+    const width = 500; // Width of the SVG graph
+    const height = 100; // Height of the SVG graph
+    const amplitude = 40; // Amplitude of sine wave
+
+    // Generate sine wave points
+    for (let x = 0; x <= width; x++) {
+      const y = height / 2 + amplitude * Math.sin((2 * Math.PI * freq * (x / width)));
+      points.push(`${x},${y}`);
+    }
+
+    return points.join(' ');
   };
 
   return (
@@ -48,18 +95,47 @@ const BMICalculator = () => {
         style={styles.input}
         value={height}
         onChangeText={setHeight}
-        placeholder="Enter height (m)"
+        placeholder="Enter height (cm or m)"
         keyboardType="numeric"
       />
 
-      <Button title="Calculate BMI" onPress={handleCalculate} />
+      <TouchableOpacity style={styles.button} onPress={handleCalculate}>
+        <Text style={styles.buttonText}>Calculate BMI</Text>
+      </TouchableOpacity>
 
       {bmi && (
         <View style={styles.resultContainer}>
-          <Text style={styles.result}>Your BMI: {bmi}</Text>
-          <Text style={styles.category}>Category: {message}</Text>
+          <Text style={[styles.result, { color: resultColor }]}>Your BMI: {bmi}</Text>
+          <Text style={[styles.category, { color: resultColor }]}>Category: {message}</Text>
+          <Text style={styles.recommendedWeight}>{weightRange}</Text>
         </View>
       )}
+              <Text style={styles.graphTitle}>Sine Wave (Frequency: {frequency} Hz)</Text>
+
+
+      <View style={styles.graphContainer}>
+        <Text style={styles.graphTitle}>Sine Wave (Frequency: {frequency} Hz)</Text>
+
+        {/* Slider for frequency control */}
+        <Slider
+          style={styles.slider}
+          minimumValue={0.1}
+          maximumValue={5}
+          step={0.1}
+          value={frequency}
+          onValueChange={setFrequency}
+        />
+
+        {/* SVG container for sine wave */}
+        <Svg width="100%" height="150">
+          <Path
+            d={`M ${generateSineWave(frequency)}`}
+            fill="none"
+            stroke="blue"
+            strokeWidth="2"
+          />
+        </Svg>
+      </View>
     </View>
   );
 };
@@ -69,38 +145,82 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#f7f7f7',
+    padding: 30,
+    backgroundColor: '#f4f4f9',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
+    fontSize: 30,
+    fontWeight: '600',
+    color: '#2C3E50',
+    marginBottom: 40,
+    textAlign: 'center',
   },
   input: {
-    width: '80%',
+    width: '100%',
     height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 15,
-    paddingHorizontal: 10,
+    borderColor: '#BDC3C7',
+    borderWidth: 1.5,
+    borderRadius: 25,
+    marginBottom: 20,
+    paddingHorizontal: 20,
     fontSize: 18,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  },
+  button: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#4CAF50',
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#fff',
+    fontWeight: '500',
   },
   resultContainer: {
     marginTop: 20,
     alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 20,
   },
   result: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#4CAF50',
+    fontSize: 26,
+    fontWeight: '600',
+    marginBottom: 10,
   },
   category: {
-    fontSize: 18,
-    color: '#555',
-    marginTop: 10,
+    fontSize: 20,
+    marginBottom: 15,
+  },
+  recommendedWeight: {
+    fontSize: 20,
+    color: '#7F8C8D',
+    fontStyle: 'italic',
+  },
+  graphContainer: {
+    marginTop: 40,
+    width: '100%',
+    alignItems: 'center',
+  },
+  graphTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 10,
+  },
+  slider: {
+    width: '80%',
+    marginBottom: 30,
   },
 });
 
